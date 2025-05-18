@@ -1,3 +1,9 @@
+//Tabalho 1 - Programação Paralela
+//Arthur Lorenzetti da Rosa - 19200621
+//Jacqueline Correia Beber  - 19200634
+//Vinicius Araujo           - 18205320
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -43,7 +49,7 @@ void* cliente_thread(void* arg) {
     pthread_mutex_lock(&mutex_fila);
     inserir_pedido(id);
     printf("Cliente %d fez um pedido.\n", id);
-    pthread_cond_broadcast(&cond_novo_pedido);  // Broadcast em vez de signal
+    pthread_cond_broadcast(&cond_novo_pedido);
     pthread_mutex_unlock(&mutex_fila);
 
     pthread_exit(NULL);
@@ -55,17 +61,23 @@ void* cozinheiro_thread(void* arg) {
     free(arg);
 
     while (1) {
+        printf("Cozinheiro %d deu o lock na mutex_fila.\n", id);
         pthread_mutex_lock(&mutex_fila);
 
         // Enquanto não há pedidos, espera ou verifica se deve terminar
         while (fila.total == 0) {
+            printf("Fila vazia no momento, Cozinheiro %d verificando se acabou o serviço (todos pedidos consumidos).\n", id);
+
             // Se todos os pedidos foram feitos e processados, termina
             if (todos_pedidos_feitos && pedidos_processados >= num_clientes) {
                 pthread_mutex_unlock(&mutex_fila);
                 printf("Cozinheiro %d finalizou o trabalho.\n", id);
                 pthread_exit(NULL);
             }
+            printf("Cozinheiro %d dormiu.\n", id);
             pthread_cond_wait(&cond_novo_pedido, &mutex_fila);
+            printf("Cozinheiro %d acordou.\n", id);
+
         }
 
         // Processa o pedido
