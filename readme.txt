@@ -1,3 +1,7 @@
+Arthur Lorenzetti da Rosa
+Jacqueline Correia Beber
+Vinicius Araujo
+
 # Sistema de Cozinha paralela com Threads
 Este projeto simula uma cozinha de restaurante utilizando programação paralela em C, onde múltiplos clientes fazem pedidos que são processados por múltiplos cozinheiros simultaneamente.
 
